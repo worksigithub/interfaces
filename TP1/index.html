@@ -59,20 +59,27 @@
                             </div>
                         </div>
                         <div id="divBotones">
-                            <button id="btnGrises" class="btn btn-info mt-2" title="Escala de grises">Grises</button>
-                            <button id="btnBrillo" class="btn btn-info mt-2" title="Cambiar brillo">Brillo</button>
-                            <button id="btnNegativo" class="btn btn-info mt-2" title="Cambiar negativo">Negativo</button>
-                            <button id="btnSepia" class="btn btn-info mt-2" title="Cambiar negativo">Sepia</button>
-                            <button id="btnBinarizacion" class="btn btn-info mt-2" title="Cambiar negativo">Binarizacion</button>
+                            <button data-name="Gris" id="btnGrises" class="btn btn-info mt-2 filtroSimple" title="Escala de grises">Grises</button>
+                            <button data-name="Negativo" id="btnNegativo" class="btn btn-info mt-2 filtroSimple" title="Cambiar a negativo">Negativo</button>
+                            <button data-name="Sepia" id="btnSepia" class="btn btn-info mt-2 filtroSimple" title="Cambiar a sepia">Sepia</button>
+                            <button data-name="Binarizacion" id="btnBinarizacion" class="btn btn-info mt-2 filtroSimple" title="Cambiar a binarizacion">Binarizacion</button>
+                            <button data-name="Brillo" id="btnBrillo" class="btn btn-info mt-2" title="Cambiar brillo">Brillo</button>
+                            <button id="btnBlur" class="btn btn-info mt-2" title="Cambiar a blur">Blur</button>
+                            <button id="btnBorde" class="btn btn-info mt-2" title="Cambiar a bordes">Bordes</button>
 
                         </div>
                         <div id="collapseBrillo" class="collapse" aria-labelledby="headingOne" data-parent="#collapseBrillo">
                             <div class="card-body">
-                                <label for="rangoBrillo">Luminosidad: </label>
-                                <input type="range" class="custom-range" min="0" max="100" id="rangoBrillo">
+                                <label for="rangoBrillo">Luminosidad: <span id="valorBRILLO"></span></label>
+                                <input type="range" data-name="Brillo" class="custom-range" min="0" max="100" id="rangoBrillo">
                             </div>
                         </div>
-
+                        <div id="collapseBlur" class="collapse" aria-labelledby="headingOne" data-parent="#collapseBlur">                            
+                            <div class="card-body">
+                                <label for="rangoBlur">Altura Blur: <span id="valorBlur"></span></label>
+                                <input type="range" class="custom-range" min="0" max="10" id="rangoBlur" value="0">
+                            </div>
+                        </div>                
 
                         <div class="row">
                             <div class="mt-3 col-md-6">

@@ -32,3 +32,4 @@ window.onload = function() {
     this.alert(Object.values(a));
     this.alert(Object.values(c));
 }
+
