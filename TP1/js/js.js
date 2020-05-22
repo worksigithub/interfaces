@@ -24,6 +24,7 @@ let grabar = document.querySelector("#btnGrabar");
 document.querySelector("#btnHome").addEventListener("click", recargar);
 document.querySelector("#btnLapiz").addEventListener("click", datosLapiz);
 document.querySelector("#btnGoma").addEventListener("click", activarGoma);
+document.querySelector("#btnVaciar").addEventListener("click", vaciarCanvas);
 
 document.querySelector("#btnGrises").addEventListener("click", cambiarGris);
 document.querySelector("#btnBrillo").addEventListener("click", e => {
@@ -70,7 +71,7 @@ function getA(imageData, x, y) {
     return imageData.data[i + 3];
 }
 
-function vaciarCanvas(canvas) {
+function vaciarCanvas() {
     ctx_result.clearRect(0, 0, width, height);
 }
 
@@ -181,7 +182,7 @@ function pintarLinea(event) {
 
 // funciones filtros
 function myDrawImageMethod(image) {
-    vaciarCanvas(c);
+    
     let ratioH = width / image.width;
     let ratioV = height / image.height;
     let ratio = Math.min(ratioH, ratioV);
