@@ -1,9 +1,12 @@
+"use strict";
+
 let c = document.querySelector("#myCanvasOrigin");
 let ctx = c.getContext("2d");
 let imageData = ctx.createImageData(c.width, c.height);
+let imageDataTem;
 let width = imageData.width;
 let height = imageData.height;
-
+let image;
 let c_result = document.querySelector("#myCanvas");
 let ctx_result = c_result.getContext("2d");
 
@@ -23,7 +26,9 @@ let grabar = document.querySelector("#btnGrabar");
 document.querySelector("#btnHome").addEventListener("click", recargar);
 document.querySelector("#btnLapiz").addEventListener("click", datosLapiz);
 document.querySelector("#btnGoma").addEventListener("click", activarGoma);
-document.querySelector("#btnVaciar").addEventListener("click", vaciarCanvas);
+document.querySelector("#btnVaciar").addEventListener("click", e=>{
+    vaciarCanvas(ctx_result);
+});
 
 //document.querySelector("#btnGrises").addEventListener("click", cambiarGris);
 document.querySelector("#btnBrillo").addEventListener("click", e => {
@@ -98,8 +103,8 @@ function getA(imageData, x, y) {
     return imageData.data[i + 3];
 }
 
-function vaciarCanvas() {
-    ctx_result.clearRect(0, 0, width, height);
+function vaciarCanvas(context) {
+    context.clearRect(0, 0, width, height);
 }
 
 function cerrarCollapse() {
@@ -221,7 +226,7 @@ function pintarLinea(event) {
 
 // funciones filtros
 function myDrawImageMethod(image) {
-    
+    vaciarCanvas(ctx);
     let ratioH = width / image.width;
     let ratioV = height / image.height;
     let ratio = Math.min(ratioH, ratioV);
@@ -328,9 +333,9 @@ function aplicarMatriz(imageData, filtroMatriz, tipo) {
                     bb = valorGris;
                     break;
                 case 'BORDE':
-                    rb = (Math.floor(rb));
-                    gb = (Math.floor(gb));
-                    bb = (Math.floor(bb));
+                    rb = ajustaBorde(Math.floor(rb));
+                    gb = ajustaBorde(Math.floor(gb));
+                    bb = ajustaBorde(Math.floor(bb));
                     break;
                 case 'SEPIA':
                     let sepiaR = Math.floor(0.393 * rb + 0.769 * gb + 0.189 * bb);
@@ -347,7 +352,7 @@ function aplicarMatriz(imageData, filtroMatriz, tipo) {
                     bb = negativo - bb;
                     break;                    
                 case 'BINARIZACION':
-                    valorMedio = (rb + gb + bb) / 2;
+                    let valorMedio = (rb + gb + bb) / 2;
                     if (valorMedio < 128) {
                         valorMedio = 0;
                     } else {
@@ -362,6 +367,13 @@ function aplicarMatriz(imageData, filtroMatriz, tipo) {
                     gb = Math.min(gb + brillo, 255);
                     bb = Math.min(bb + brillo, 255);
                     break;
+                case 'SATURACION':                    
+                    let p_hsv = rgbhsv(rb,gb,bb);
+                    let p_rgb = hsvrgb(p_hsv.h,1,p_hsv.v);                
+                    rb = Math.min(p_rgb.r, 255);
+                    gb = Math.min(p_rgb.g, 255);
+                    bb = Math.min(p_rgb.b, 255);
+                    break;                
                 case 'BLUR':                    
                     
                     break;
@@ -374,14 +386,8 @@ function aplicarMatriz(imageData, filtroMatriz, tipo) {
     return imageData;    
 }
 
-function ajustaBorde(valor){    
-    /* if(valor>255){
-        valor = 255;
-    }
-    if(valor<0){
-        valor = 0;
-    } */
-    /* if(valor>765){
+function ajustaBorde(valor){            
+    if(valor>765){
         valor = 255;
     }
     else if(valor>510){
@@ -392,6 +398,74 @@ function ajustaBorde(valor){
     }
     else if(valor>0){
         valor = 64;
-    } */
+    }
     return valor;
+}
+
+function rgbhsv(r, g, b) {
+    var h;
+    var s;
+    var v;
+    var maxColor = Math.max(r, g, b);
+    var minColor = Math.min(r, g, b);
+    var delta = maxColor - minColor;
+    if (delta == 0) {
+        h = 0;
+    } else if (r == maxColor) {
+        h = (6 + (g - b) / delta) % 6;
+    } else if (g == maxColor) {
+        h = 2 + (b - r) / delta;
+    } else if (b == maxColor) {
+        h = 4 + (r - g) / delta;
+    } else {
+        h = 0;
+    }
+    h = h / 6;
+
+    if (maxColor != 0) {
+        s = delta / maxColor;
+    } else {
+        s = 0;
+    }
+    v = maxColor / 255;
+    let arr = { h: h, s: s, v: v };
+    return arr;
+};
+
+function hsvrgb(h, s, v) {
+    var r, g, b, i, f, p, q, t;
+    if (arguments.length === 1) {
+        s = h.s, v = h.v, h = h.h;
+    }
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0:
+            r = v, g = t, b = p;
+            break;
+        case 1:
+            r = q, g = v, b = p;
+            break;
+        case 2:
+            r = p, g = v, b = t;
+            break;
+        case 3:
+            r = p, g = q, b = v;
+            break;
+        case 4:
+            r = t, g = p, b = v;
+            break;
+        case 5:
+            r = v, g = p, b = q;
+            break;
+    }
+    let arr = {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    };
+    return arr;
 }
