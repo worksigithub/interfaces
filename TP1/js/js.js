@@ -269,17 +269,11 @@ function cambiarBorde(){
         [1]
     ];
     imageData = aplicarMatriz(imageData, filtroMatriz, "GRIS");   
-    /* filtroMatriz = [    
+    filtroMatriz = [    
         [1, 0, -1],
         [1, 1, -1],
         [1, 0, -1]
-    ]; */
-    filtroMatriz = [    
-        [-1, -1, -1],
-        [-1, 8, -1],
-        [-1, -1, -1]
-    ];
-
+    ];    
     imageData = aplicarMatriz(imageData, filtroMatriz, "BORDE");
     mostrarResultado(imageData, 0, 0);    
 }
