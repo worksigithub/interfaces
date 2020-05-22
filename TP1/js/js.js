@@ -150,6 +150,7 @@ function datosLapiz() {
         c_result.addEventListener("mousemove", pintarLinea);
         c_result.addEventListener("mousedown", puntoActual);
         c_result.addEventListener("mouseup", puntoActual);
+        c_result.addEventListener("mouseleave", parar);
     } else {
         $("#collapsePintar").collapse('hide');
         document.querySelector("#btnLapiz").classList.remove("btn-primary");
@@ -163,11 +164,11 @@ function activarGoma() {
         c_result.addEventListener("mousemove", pintarLinea);
         c_result.addEventListener("mousedown", puntoActual);
         c_result.addEventListener("mouseup", puntoActual);
+        c_result.addEventListener("mouseleave", parar);
         $("#collapsePintar").collapse('hide');
         document.querySelector("#btnLapiz").classList.remove("btn-primary");
         document.querySelector("#btnGoma").classList.add("btn-primary");
     } else {
-
         document.querySelector("#btnGoma").classList.remove("btn-primary");
     }
 }
@@ -185,6 +186,16 @@ function puntoActual(event) {
             ctx_result.closePath();
         }
     }
+}
+
+function parar(event) {
+    console.log("Afuera");
+    goma = false;
+    pintar = false; 
+    pintando = false;
+    document.querySelector("#btnLapiz").classList.remove("btn-primary");
+    document.querySelector("#btnGoma").classList.remove("btn-primary");
+    ctx_result.closePath();    
 }
 
 function pintarLinea(event) {
@@ -257,12 +268,18 @@ function cambiarBorde(){
     let filtroMatriz = [    
         [1]
     ];
-    imageData = aplicarMatriz(imageData, filtroMatriz, "GRIS");    
-    filtroMatriz = [    
+    imageData = aplicarMatriz(imageData, filtroMatriz, "GRIS");   
+    /* filtroMatriz = [    
         [1, 0, -1],
         [1, 1, -1],
         [1, 0, -1]
+    ]; */
+    filtroMatriz = [    
+        [-1, -1, -1],
+        [-1, 8, -1],
+        [-1, -1, -1]
     ];
+
     imageData = aplicarMatriz(imageData, filtroMatriz, "BORDE");
     mostrarResultado(imageData, 0, 0);    
 }
@@ -316,9 +333,9 @@ function aplicarMatriz(imageData, filtroMatriz, tipo) {
                     bb = valorGris;
                     break;
                 case 'BORDE':
-                    rb = ajustaBorde(Math.floor(rb));
-                    gb = ajustaBorde(Math.floor(gb));
-                    bb = ajustaBorde(Math.floor(bb));
+                    rb = (Math.floor(rb));
+                    gb = (Math.floor(gb));
+                    bb = (Math.floor(bb));
                     break;
                 case 'SEPIA':
                     let sepiaR = Math.floor(0.393 * rb + 0.769 * gb + 0.189 * bb);
@@ -363,7 +380,13 @@ function aplicarMatriz(imageData, filtroMatriz, tipo) {
 }
 
 function ajustaBorde(valor){    
-    if(valor>765){
+    /* if(valor>255){
+        valor = 255;
+    }
+    if(valor<0){
+        valor = 0;
+    } */
+    /* if(valor>765){
         valor = 255;
     }
     else if(valor>510){
@@ -374,6 +397,6 @@ function ajustaBorde(valor){
     }
     else if(valor>0){
         valor = 64;
-    }
+    } */
     return valor;
 }
