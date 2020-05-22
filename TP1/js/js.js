@@ -98,13 +98,8 @@ function getA(imageData, x, y) {
     return imageData.data[i + 3];
 }
 
-<<<<<<< HEAD
-function vaciarCanvas(context) {
-    context.clearRect(0, 0, c.width, c.height);
-=======
 function vaciarCanvas() {
     ctx_result.clearRect(0, 0, width, height);
->>>>>>> master
 }
 
 function cerrarCollapse() {
@@ -226,11 +221,7 @@ function pintarLinea(event) {
 
 // funciones filtros
 function myDrawImageMethod(image) {
-<<<<<<< HEAD
-    vaciarCanvas(ctx);
-=======
     
->>>>>>> master
     let ratioH = width / image.width;
     let ratioV = height / image.height;
     let ratio = Math.min(ratioH, ratioV);
