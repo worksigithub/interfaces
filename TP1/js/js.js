@@ -26,9 +26,10 @@ let grabar = document.querySelector("#btnGrabar");
 document.querySelector("#btnHome").addEventListener("click", recargar);
 document.querySelector("#btnLapiz").addEventListener("click", datosLapiz);
 document.querySelector("#btnGoma").addEventListener("click", activarGoma);
-document.querySelector("#btnVaciar").addEventListener("click", e=>{
+document.querySelector("#btnVaciar").addEventListener("click", e => {
     vaciarCanvas(ctx_result);
 });
+
 
 //document.querySelector("#btnGrises").addEventListener("click", cambiarGris);
 document.querySelector("#btnBrillo").addEventListener("click", e => {
@@ -37,7 +38,7 @@ document.querySelector("#btnBrillo").addEventListener("click", e => {
     $("#collapsePintar").collapse('hide');
 });
 
-document.querySelectorAll('.filtroSimple').forEach(b=>{
+document.querySelectorAll('.filtroSimple').forEach(b => {
     b.addEventListener("click", cambiarFiltroSimple);
 })
 
@@ -65,13 +66,13 @@ function getPixel(imgData, x, y) {
     return [r, g, b, a];
 }
 
-function verificar(valor){
-    if(valor<0){
-        valor=0;
-    }        
-    if(valor>255){
-        valor=255;
-    } 
+function verificar(valor) {
+    if (valor < 0) {
+        valor = 0;
+    }
+    if (valor > 255) {
+        valor = 255;
+    }
     return valor;
 }
 
@@ -197,11 +198,11 @@ function puntoActual(event) {
 function parar(event) {
     console.log("Afuera");
     goma = false;
-    pintar = false; 
+    pintar = false;
     pintando = false;
     document.querySelector("#btnLapiz").classList.remove("btn-primary");
     document.querySelector("#btnGoma").classList.remove("btn-primary");
-    ctx_result.closePath();    
+    ctx_result.closePath();
 }
 
 function pintarLinea(event) {
@@ -239,49 +240,49 @@ function myDrawImageMethod(image) {
 }
 
 //gris-negativo-sepia-binarizacion-brillo
-function cambiarFiltroSimple() {    
+function cambiarFiltroSimple() {
     let tipo = this.getAttribute('data-name').toUpperCase();
     imageData = ctx.getImageData(0, 0, width, height);
-    let filtroMatriz = [    
+    let filtroMatriz = [
         [1]
     ];
     imageData = aplicarMatriz(imageData, filtroMatriz, tipo);
-    mostrarResultado(imageData, 0, 0);    
+    mostrarResultado(imageData, 0, 0);
 }
 
 function cambiarBlur() {
     imageData = ctx.getImageData(0, 0, width, height);
-    let distancia = document.querySelector("#rangoBlur").value;    
+    let distancia = document.querySelector("#rangoBlur").value;
     document.querySelector("#valorBlur").innerHTML = distancia;
     let filtroMatriz = [];
     let item = [];
     let tam = (distancia * 2) + 1;
-    let elem = Math.pow(tam,2);
-    let valor = 1/elem;
+    let elem = Math.pow(tam, 2);
+    let valor = 1 / elem;
     valor = valor.toFixed(2);
     for (let d = 0; d < tam; d++) {
         item.push(valor);
     }
     for (let d = 0; d < tam; d++) {
         filtroMatriz.push(item);
-    }        
+    }
     imageData = aplicarMatriz(imageData, filtroMatriz, "BLUR");
-    mostrarResultado(imageData, 0, 0);    
+    mostrarResultado(imageData, 0, 0);
 }
 
-function cambiarBorde(){
+function cambiarBorde() {
     imageData = ctx.getImageData(0, 0, width, height);
-    let filtroMatriz = [    
+    let filtroMatriz = [
         [1]
     ];
-    imageData = aplicarMatriz(imageData, filtroMatriz, "GRIS");   
-    filtroMatriz = [    
+    imageData = aplicarMatriz(imageData, filtroMatriz, "GRIS");
+    filtroMatriz = [
         [1, 0, -1],
         [1, 1, -1],
         [1, 0, -1]
-    ];    
+    ];
     imageData = aplicarMatriz(imageData, filtroMatriz, "BORDE");
-    mostrarResultado(imageData, 0, 0);    
+    mostrarResultado(imageData, 0, 0);
 }
 
 function aplicarMatriz(imageData, filtroMatriz, tipo) {
@@ -290,42 +291,39 @@ function aplicarMatriz(imageData, filtroMatriz, tipo) {
     let rb = 0;
     let gb = 0;
     let bb = 0;
-    let ab = 255;    
-    let distancia = (filtroMatriz[0].length - 1) / 2; 
-    
-    if(tipo=='BRILLO'){
+    let ab = 255;
+    let distancia = (filtroMatriz[0].length - 1) / 2;
+
+    if (tipo == 'BRILLO') {
         brillo = document.querySelector('#rangoBrillo').value;
         document.querySelector("#valorBrillo").innerHTML = brillo + "%";
         brillo = (255 * brillo) / 100;
-    }
-    else if(tipo=='BLUR'){
+    } else if (tipo == 'BLUR') {
 
-    }
-    else{
-        cerrarCollapse();        
+    } else {
+        cerrarCollapse();
     }
     for (let i = 0; i < imageData.width; i++) {
-        for (let j = 0; j < imageData.height; j++) {            
+        for (let j = 0; j < imageData.height; j++) {
             rb = 0;
             gb = 0;
             bb = 0;
-            if(distancia==0){
-                let pixel_RGBA = getPixel(imageData, i, j);                
+            if (distancia == 0) {
+                let pixel_RGBA = getPixel(imageData, i, j);
                 rb += (pixel_RGBA[0] * filtroMatriz[0][0]);
                 gb += (pixel_RGBA[1] * filtroMatriz[0][0]);
                 bb += (pixel_RGBA[2] * filtroMatriz[0][0]);
-            }
-            else{
-                for (let dx = (distancia*-1); dx <= distancia; dx++) {
-                    for (let dy = (distancia*-1); dy <= distancia; dy++) {
-                        let pixel_RGBA = getPixel(imageData, i - dx, j - dy);                
-                        rb += (pixel_RGBA[0] * filtroMatriz[distancia+dx][distancia+dy]);
-                        gb += (pixel_RGBA[1] * filtroMatriz[distancia+dx][distancia+dy]);
-                        bb += (pixel_RGBA[2] * filtroMatriz[distancia+dx][distancia+dy]);
+            } else {
+                for (let dx = (distancia * -1); dx <= distancia; dx++) {
+                    for (let dy = (distancia * -1); dy <= distancia; dy++) {
+                        let pixel_RGBA = getPixel(imageData, i - dx, j - dy);
+                        rb += (pixel_RGBA[0] * filtroMatriz[distancia + dx][distancia + dy]);
+                        gb += (pixel_RGBA[1] * filtroMatriz[distancia + dx][distancia + dy]);
+                        bb += (pixel_RGBA[2] * filtroMatriz[distancia + dx][distancia + dy]);
                     }
                 }
             }
-            switch (tipo){
+            switch (tipo) {
                 case 'GRIS':
                     let valorGris = (rb + gb + bb) / 3;
                     rb = valorGris;
@@ -350,53 +348,50 @@ function aplicarMatriz(imageData, filtroMatriz, tipo) {
                     rb = negativo - rb;
                     gb = negativo - gb;
                     bb = negativo - bb;
-                    break;                    
+                    break;
                 case 'BINARIZACION':
                     let valorMedio = (rb + gb + bb) / 2;
                     if (valorMedio < 128) {
                         valorMedio = 0;
                     } else {
                         valorMedio = 255;
-                    }                   
+                    }
                     rb = valorMedio;
                     gb = valorMedio;
                     bb = valorMedio;
                     break;
-                case 'BRILLO':                    
+                case 'BRILLO':
                     rb = Math.min(rb + brillo, 255);
                     gb = Math.min(gb + brillo, 255);
                     bb = Math.min(bb + brillo, 255);
                     break;
-                case 'SATURACION':                    
-                    let p_hsv = rgbhsv(rb,gb,bb);
-                    let p_rgb = hsvrgb(p_hsv.h,1,p_hsv.v);                
+                case 'SATURACION':
+                    let p_hsv = rgbhsv(rb, gb, bb);
+                    let p_rgb = hsvrgb(p_hsv.h, 1, p_hsv.v);
                     rb = Math.min(p_rgb.r, 255);
                     gb = Math.min(p_rgb.g, 255);
                     bb = Math.min(p_rgb.b, 255);
-                    break;                
-                case 'BLUR':                    
-                    
                     break;
-                default :
+                case 'BLUR':
+
+                    break;
+                default:
                     break
             }
-            setPixel(imageData, i, j, rb, gb, bb, ab);                
+            setPixel(imageData, i, j, rb, gb, bb, ab);
         }
     }
-    return imageData;    
+    return imageData;
 }
 
-function ajustaBorde(valor){            
-    if(valor>765){
+function ajustaBorde(valor) {
+    if (valor > 765) {
         valor = 255;
-    }
-    else if(valor>510){
+    } else if (valor > 510) {
         valor = 192;
-    }
-    else if(valor>255){
+    } else if (valor > 255) {
         valor = 128;
-    }
-    else if(valor>0){
+    } else if (valor > 0) {
         valor = 64;
     }
     return valor;
