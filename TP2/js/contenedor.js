@@ -127,29 +127,31 @@ class Contenedor {
         });
         this.contenedor.addEventListener('mouseup', r => {
             this.dibujando = false;
-            if ((this.idFigura != -1) && (this.jugando)) {
+            if ((this.idFigura != -1) && (this.jugando) && (!this.fichas[this.idFigura].ocupada)) {
                 this.verificarPosicion(r.layerX, r.layerY);
             }
             this.idFigura = -1;
         });
         this.contenedor.addEventListener('mousemove', r => {
             if ((this.idFigura != -1) && (this.jugando)) {
-                if (!this.tablero.toca(r.layerX + this.radio, r.layerY + this.radio)) {
-                    this.fichas[this.idFigura].setPosicion(r.layerX, r.layerY);
-                    this.redraw();
+                if (this.fichas[this.idFigura].ocupada == false) {
+                    if (!this.tablero.toca(r.layerX + this.radio, r.layerY + this.radio)) {
+                        this.fichas[this.idFigura].setPosicion(r.layerX, r.layerY);
+                        this.redraw();
+                    }
                 }
             }
         });
     }
 
     verificarPosicion(x, y) {
-
         for (let i = 0; i < this.posiciones[0].length; i++) {
             if (this.posiciones[0][i].toca(x, this.posiciones[0][i].y)) {
                 for (let j = this.posiciones.length - 1; j >= 0; j--) {
                     if (!this.posiciones[j][i].ocupada) {
                         this.fichas[this.idFigura].x = this.posiciones[j][i].x;
                         this.fichas[this.idFigura].y = this.posiciones[j][i].y;
+                        this.fichas[this.idFigura].ocupada = true;
                         this.posiciones[j][i].ocupada = true;
                         this.posiciones[j][i].jugador = this.jugador;
                         this.verificarGanador();
