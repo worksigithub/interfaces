@@ -5,6 +5,9 @@ class Contenedor {
         this.contenedor = document.querySelector(contenedor);
         this.ctx = this.contenedor.getContext('2d');
         this.colJugador = ["#ab8cba", "#ebdc36", "#ff2137"];
+        this.coeficiente = (this.contenedor.width / 10);
+        this.xTablero = (this.coeficiente * 1.5);
+        this.yTablero = (this.coeficiente * 1);
         this.jugador = 0;
         this.fichas = [];
         this.posiciones = [
@@ -19,22 +22,22 @@ class Contenedor {
         this.dibujando = false;
         this.jugando = false;
         this.idFigura = -1;
-        this.radio = 35;
+        this.radio = this.contenedor.width * .03;
         this.cantidad = 42;
         //
         this.fondo = [];
         let ijug1 = new Image();
         let ijug2 = new Image();
-        let itab1 = new Image();
+        let itab3 = new Image();
         ijug1.src = 'images/fondo1.png';
         ijug2.src = 'images/fondo2.png';
-        itab1.src = 'images/fondo3.png';
+        itab3.src = 'images/fondo3.jpg';
         ijug1.onload = function() {
             this.fondo.push(ijug1);
             ijug2.onload = function() {
                 this.fondo.push(ijug2);
-                itab1.onload = function() {
-                    this.fondo.push(itab1);
+                itab3.onload = function() {
+                    this.fondo.push(itab3);
                 }.bind(this);
             }.bind(this);
         }.bind(this);
@@ -55,19 +58,16 @@ class Contenedor {
         ];
         // tablero
         let relleno = "#344ac2";
-        let coeficiente = (this.contenedor.width / 9);
-        let xTablero = (coeficiente * 1);
-        let yTablero = (coeficiente * 1);
-        let largoTablero = (this.contenedor.width) - (xTablero * 2);
-        let altoTablero = (this.contenedor.height) - (yTablero);
-        this.tablero = new Rectangulo(xTablero, yTablero, relleno, largoTablero, altoTablero, this.ctx, this.fondo[2]);
-        this.tablero.draw();
+
+        let largoTablero = (this.contenedor.width) - (this.xTablero * 2);
+        let altoTablero = (this.contenedor.height) - (this.yTablero);
+        this.tablero = new Rectangulo(this.xTablero, this.yTablero, relleno, largoTablero, altoTablero, this.ctx, this.fondo[2]);
         // posiciones
         let posicion = "";
         relleno = "#ffffff";
         for (let i = 0; i < 6; i++) {
             for (let j = 0; j < 7; j++) {
-                posicion = new Circulo(xTablero + (coeficiente * j) + (coeficiente / 3) + 20, yTablero + ((coeficiente - 30) * i) + (coeficiente / 3) + 10, this.radio, relleno, this.ctx, null);
+                posicion = new Circulo(this.xTablero + (this.coeficiente * j) + (this.coeficiente / 3) + 20, this.yTablero + ((this.coeficiente - 30) * i) + (this.coeficiente / 3) + 10, this.radio, relleno, this.ctx, null);
                 this.posiciones[i].push(posicion);
             }
         }
@@ -77,18 +77,18 @@ class Contenedor {
         // fichas                
         posicion = "";
         relleno = ["#e62525", "#a820a6"];
-        let xjug = [coeficiente / 2, this.contenedor.width - (coeficiente / 2)];
+        let xjug = [this.coeficiente / 2, this.contenedor.width - (this.coeficiente / 2)];
 
         let i = 0;
         let jnuevo = 0;
         for (let j = 0; j < this.cantidad; j++) {
-            if (j > this.cantidad / 2) {
+            if (j >= this.cantidad / 2) {
                 if (i == 0) {
                     jnuevo = 0;
                 }
                 i = 1;
             }
-            posicion = new Circulo(xjug[i], yTablero + ((this.radio / 2) * jnuevo) + coeficiente, this.radio, relleno[i], this.ctx, this.fondo[i]);
+            posicion = new Circulo(xjug[i], this.yTablero + ((this.radio / 2) * jnuevo) + this.coeficiente, this.radio, relleno[i], this.ctx, this.fondo[i]);
             this.fichas.push(posicion);
             jnuevo++;
         }
@@ -136,8 +136,10 @@ class Contenedor {
             if ((this.idFigura != -1) && (this.jugando)) {
                 if (this.fichas[this.idFigura].ocupada == false) {
                     if (!this.tablero.toca(r.layerX + this.radio, r.layerY + this.radio)) {
+
                         this.fichas[this.idFigura].setPosicion(r.layerX, r.layerY);
                         this.redraw();
+
                     }
                 }
             }
